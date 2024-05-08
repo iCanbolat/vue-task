@@ -4,7 +4,7 @@ import { computed } from "vue";
 import { labels } from "../data";
 import { taskSchema } from "../schema";
 import type { Task } from "../schema";
-import {DotsHorizontalIcon} from "@radix-icons/vue";
+import { DotsHorizontalIcon } from "@radix-icons/vue";
 
 import { Button } from "../../components/ui/button";
 import {
@@ -20,6 +20,7 @@ import {
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "../../components/ui/dropdown-menu";
+import { Task } from "@/types";
 
 interface DataTableRowActionsProps {
   row: Row<Task>;

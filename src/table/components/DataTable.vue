@@ -18,7 +18,6 @@ import {
 
 import ModalComponent from "@/components/modal/ModalComponent.vue";
 import { ref } from "vue";
-import type { Task } from "../schema";
 import DataTablePagination from "./DataTablePagination.vue";
 import DataTableToolbar from "./DataTableToolbar.vue";
 import { valueUpdater } from "../../lib/utils";
@@ -31,7 +30,7 @@ import {
   TableRow,
 } from "../../components/ui/table";
 import { useStore } from "@/store";
-import { TestTodo } from "@/types";
+import { Task } from "@/types";
 
 interface DataTableProps {
   columns: ColumnDef<Task, any>[];
@@ -39,7 +38,7 @@ interface DataTableProps {
 }
 const store = useStore();
 
-function openDialog(row: TestTodo) {
+function openDialog(row: Task) {
   store.commit("setDialog", row);
 }
 
@@ -67,7 +66,7 @@ const table = useVueTable({
     get columnVisibility() {
       return columnVisibility.value;
     },
-    
+
     // get rowSelection() {
     //   return rowSelection.value;
     // },
@@ -94,7 +93,6 @@ const table = useVueTable({
 });
 
 console.log(table);
-
 </script>
 
 <template>
@@ -133,23 +131,15 @@ console.log(table);
               v-for="row in table.getRowModel()
                 .rows"
               :key="row.id"
-
               @click="
                 openDialog(
-                  row.original as TestTodo
+                  row.original as unknown as Task
                 )
               "
             >
               <TableCell
                 v-for="cell in row.getVisibleCells()"
                 :key="cell.id"
-                @click="
-                  (e) => {
-                    if (cell.column.id === 'actions') {
-                      e.stopPropagation();
-                    }
-                  }
-                "
               >
                 <FlexRender
                   :render="

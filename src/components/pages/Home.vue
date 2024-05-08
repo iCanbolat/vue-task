@@ -17,31 +17,35 @@
         </p>
       </div>
     </div>
-    <DataTable :data="tasks" :columns="columns" />
+    <DataTable
+      :data="realTasks"
+      :columns="columns"
+    />
   </div>
   <Toaster />
 </template>
 
-<script lang="ts">
-import { defineComponent } from "vue";
+<script setup lang="ts">
+import { onMounted, ref, watchEffect } from "vue";
 import { columns } from "../../table/components/columns";
-import tasks from "../../table/tasks.json";
 import DataTable from "@/table/components/DataTable.vue";
 import Toaster from "@/components/ui/toast/Toaster.vue";
+import { useStore } from "@/store";
+import { Task } from "@/types";
+// import { TodoPriority } from "@/types";
 
-console.log(tasks);
+const store = useStore();
 
-export default defineComponent({
-  name: "Home",
-  components: {
-    DataTable,
-    Toaster,
-  },
-  setup() {
-    return {
-      tasks,
-      columns,
-    };
-  },
+const fetchTodos = () => {
+  store.dispatch("getTasks", {});
+};
+
+const realTasks = ref<Task[]>([]);
+
+onMounted(fetchTodos);
+
+watchEffect(() => {
+  const currentTasks = store.getters.taskList;
+  realTasks.value = currentTasks;
 });
 </script>

@@ -1,10 +1,10 @@
 // import { todos } from "@/lib/constants";
-import { TestTodo } from "@/types";
+import { Task, TestTodo } from "@/types";
 
 export type State = {
-  todos: TestTodo[];
+  todos: Task[];
   isOpen: boolean;
-  todo: TestTodo | null;
+  todo: Task | null;
 };
 
 export const state: State = {

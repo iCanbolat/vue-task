@@ -1,19 +1,27 @@
 import { MutationTree } from "vuex";
 import { State } from "./state";
-import { TestTodo } from "@/types";
+import { Task } from "@/types";
 
 export type Mutations = {
-  addTodo(state: State, payload: TestTodo): void;
+  setNewTasks(state: State, payload: Task): void;
   setDialog(
     state: State,
-    payload: TestTodo | null
+    payload: Task | null
   ): void;
+  setInitialTasks(
+    state: State,
+    payload: Task[]
+  ): void;
+  deleteTask(state: State, payload: number): void;
 };
 
 export const mutations: MutationTree<State> &
   Mutations = {
-  addTodo(state, payload) {
+  setNewTasks(state, payload) {
     state.todos = [...state.todos, payload];
+  },
+  setInitialTasks(state, payload) {
+    state.todos = payload;
   },
   setDialog(state, payload) {
     state.isOpen = !state.isOpen;
@@ -22,5 +30,10 @@ export const mutations: MutationTree<State> &
     } else {
       state.todo = null;
     }
+  },
+  deleteTask(state, payload) {
+    state.todos = state.todos.filter(
+      (todo) => todo.id !== payload
+    );
   },
 };

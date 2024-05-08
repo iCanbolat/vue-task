@@ -8,6 +8,14 @@ export type TodoState = {
   todos: Todo[];
 };
 
+export interface Task {
+  id: number;
+  title: string;
+  content: string;
+  isComplete: TodoStatus;
+  priority: TodoPriority;
+}
+
 export interface TestTodo {
   title: string;
   id: string;
@@ -16,12 +24,17 @@ export interface TestTodo {
   priority: string;
 }
 export enum TodoStatus {
-  DONE = "done",
-  INPROGRESS = "in progress",
-  TODO = "todo"
+  DONE = "COMPLETED",
+  INPROGRESS = "BEING",
+  TODO = "STARTED",
 }
 export enum TodoPriority {
-  HIGH = "high",
-  MEDIUM = "medium",
-  LOW = "low",
+  HIGH = "HIGH",
+  MEDIUM = "MEDIUM",
+  LOW = "LOW",
 }
+
+export type QueryParams = {
+  isComplete?: TodoStatus[];
+  priority?: TodoPriority[];
+};

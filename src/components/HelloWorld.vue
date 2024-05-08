@@ -6,17 +6,16 @@ export default defineComponent({
   setup() {
     const store = useStore();
 
-    store.dispatch("getTodos");
+    store.dispatch("getTasks",{});
 
-    
-
-    const todos = computed(() => store.getters.todoList);
+    const todos = computed(
+      () => store.getters.taskList
+    );
 
     console.log(todos);
-    
 
     return {
-      todos
+      todos,
     };
   },
 });
@@ -27,22 +26,31 @@ export default defineComponent({
     {{ todos[0].title }}
     <p>
       Edit
-      <code>components/HelloWorld.vue</code> to test HMR
+      <code>components/HelloWorld.vue</code> to
+      test HMR
     </p>
   </div>
 
   <p>
     Check out
-    <a href="https://vuejs.org/guide/quick-start.html#local" target="_blank"
+    <a
+      href="https://vuejs.org/guide/quick-start.html#local"
+      target="_blank"
       >create-vue</a
     >, the official Vue + Vite starter
   </p>
   <p>
     Install
-    <a href="https://github.com/vuejs/language-tools" target="_blank">Volar</a>
+    <a
+      href="https://github.com/vuejs/language-tools"
+      target="_blank"
+      >Volar</a
+    >
     in your IDE for a better DX
   </p>
-  <p class="read-the-docs">Click on the Vite and Vue logos to learn more</p>
+  <p class="read-the-docs">
+    Click on the Vite and Vue logos to learn more
+  </p>
 </template>
 
 <style scoped>

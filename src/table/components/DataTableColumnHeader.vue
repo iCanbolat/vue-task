@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { Column } from "@tanstack/vue-table";
-import type { Task } from "../schema";
+// import type { Task } from "../schema";
 import { ArrowDownIcon } from "@radix-icons/vue";
 import { ArrowUpIcon } from "@radix-icons/vue";
 import { CaretSortIcon } from "@radix-icons/vue";
@@ -15,6 +15,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "../../components/ui/dropdown-menu";
+import { Task } from "@/types";
 
 interface DataTableColumnHeaderProps {
   column: Column<Task, any>;

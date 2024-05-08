@@ -4,8 +4,6 @@ import { ArrowRightIcon } from "@radix-icons/vue";
 import { ArrowUpIcon } from "@radix-icons/vue";
 import { CheckCircledIcon } from "@radix-icons/vue";
 import { CircleIcon } from "@radix-icons/vue";
-import { CrossCircledIcon } from "@radix-icons/vue";
-import { QuestionMarkCircledIcon } from "@radix-icons/vue";
 import { StopwatchIcon } from "@radix-icons/vue";
 
 export const labels = [
@@ -24,47 +22,37 @@ export const labels = [
 ];
 
 export const statuses = [
-  // {
-  //   value: "backlog",
-  //   label: "Backlog",
-  //   icon: h(QuestionMarkCircledIcon),
-  // },
   {
-    value: "todo",
+    value: "STARTED",
     label: "Todo",
     icon: h(CircleIcon),
   },
   {
-    value: "in progress",
+    value: "BEING",
     label: "In Progress",
     icon: h(StopwatchIcon),
   },
   {
-    value: "done",
+    value: "COMPLETED",
     label: "Done",
     icon: h(CheckCircledIcon),
   },
-  // {
-  //   value: "canceled",
-  //   label: "Canceled",
-  //   icon: h(CrossCircledIcon),
-  // },
 ];
 
 export const priorities = [
   {
     label: "Low",
-    value: "low",
+    value: "LOW",
     icon: h(ArrowDownIcon),
   },
   {
     label: "Medium",
-    value: "medium",
+    value: "MEDIUM",
     icon: h(ArrowRightIcon),
   },
   {
     label: "High",
-    value: "high",
+    value: "HIGH",
     icon: h(ArrowUpIcon),
   },
 ];

@@ -2,7 +2,6 @@
 import type { Column } from "@tanstack/vue-table";
 import type { Component } from "vue";
 import { computed } from "vue";
-import type { Task } from "../schema";
 import {
   CheckIcon,
   PlusCircledIcon,
@@ -23,6 +22,7 @@ import {
   CommandSeparator,
 } from "@/components/ui/command";
 import { cn } from "@/lib/utils";
+import { Task } from "@/types";
 
 interface DataTableFacetedFilter {
   column?: Column<Task, any>;
@@ -46,7 +46,6 @@ const selectedValues = computed(
       props.column?.getFilterValue() as string[]
     )
 );
-
 </script>
 
 <template>

@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import type { Table } from "@tanstack/vue-table";
 import { computed } from "vue";
-import type { Task } from "../schema";
 
 import { priorities, statuses } from "../data";
 import DataTableFacetedFilter from "./DataTableFacetedFilter.vue";
@@ -12,6 +11,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useStore } from "@/store";
+import { Task } from "@/types";
 
 interface DataTableToolbarProps {
   table: Table<Task>;

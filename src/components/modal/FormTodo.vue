@@ -2,6 +2,7 @@
 import { useForm } from "vee-validate";
 import { toTypedSchema } from "@vee-validate/zod";
 import * as z from "zod";
+import { Textarea } from "@/components/ui/textarea";
 import { SymbolIcon } from "@radix-icons/vue";
 import {
   FormControl,
@@ -20,32 +21,40 @@ import {
 } from "@/components/ui/select";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
-import { TestTodo } from "@/types";
+import {
+  Task,
+  TodoPriority,
+  TodoStatus,
+} from "@/types";
 import { useToast } from "@/components/ui/toast/use-toast";
-import { h } from "vue";
 import { cn } from "@/lib/utils";
+import { useStore } from "@/store";
 
 const { toast } = useToast();
 
 const props = defineProps<{
   toggleEdit: () => void;
-  todo: TestTodo | null;
+  todo: Task | null;
+  isEdit: boolean;
 }>();
+
+console.log(props.todo);
 
 const formEditSchema = toTypedSchema(
   z.object({
+    id: z.number(),
     title: z
       .string({
         required_error: "Provide a title",
       })
-      .min(2, "Minimum 5 char")
+      .max(50, "Maximum 50 char"),
+    content: z
+      .string({
+        required_error: "Provide a description",
+      })
       .max(90, "Maximum 90 char"),
-    priority: z.string({
-      required_error: "Provide a priority",
-    }),
-    status: z.string({
-      required_error: "Provide a status",
-    }),
+    priority: z.nativeEnum(TodoPriority),
+    isComplete: z.nativeEnum(TodoStatus),
   })
 );
 
@@ -54,26 +63,27 @@ const form = useForm({
   initialValues: {
     title: props.todo?.title,
     priority: props.todo?.priority,
-    status: props.todo?.status ?? 'todo',
+    isComplete:
+      props.todo?.isComplete ?? TodoStatus.TODO,
+    content: props.todo?.content,
+    id: props.todo?.id ?? 0,
   },
 });
 
+const store = useStore();
+
 const onSubmit = form.handleSubmit((values) => {
   console.log("Form submitted!", values);
+  if (props.isEdit) {
+    store.dispatch("updateTask", values);
+    return;
+  }
+  //@ts-ignore
+  store.dispatch("addTask", values);
   toast({
-    title: "You submitted the following values:",
-    description: h(
-      "pre",
-      {
-        class:
-          "mt-2 w-[340px] rounded-md bg-slate-950 p-4",
-      },
-      h(
-        "code",
-        { class: "text-white" },
-        JSON.stringify(values, null, 2)
-      )
-    ),
+    title: "Task Created!",
+    class: "bg-green-600 text-white",
+    duration: 2000,
   });
 });
 </script>
@@ -99,6 +109,23 @@ const onSubmit = form.handleSubmit((values) => {
         <FormMessage />
       </FormItem>
     </FormField>
+
+    <FormField
+      v-slot="{ componentField }"
+      name="content"
+    >
+      <FormItem>
+        <FormLabel>Task Description</FormLabel>
+        <FormControl>
+          <Textarea
+            type="text"
+            placeholder="Fix prod conflicts"
+            v-bind="componentField"
+          />
+        </FormControl>
+        <FormMessage />
+      </FormItem>
+    </FormField>
     <FormField
       v-slot="{ componentField }"
       name="priority"
@@ -115,13 +142,13 @@ const onSubmit = form.handleSubmit((values) => {
           </FormControl>
           <SelectContent>
             <SelectGroup>
-              <SelectItem value="high">
+              <SelectItem value="HIGH">
                 High
               </SelectItem>
-              <SelectItem value="medium">
+              <SelectItem value="MEDIUM">
                 Medium
               </SelectItem>
-              <SelectItem value="low">
+              <SelectItem value="LOW">
                 Low
               </SelectItem>
             </SelectGroup>
@@ -133,7 +160,7 @@ const onSubmit = form.handleSubmit((values) => {
     </FormField>
     <FormField
       v-slot="{ componentField }"
-      name="status"
+      name="isComplete"
     >
       <FormItem>
         <FormLabel>Status</FormLabel>
@@ -150,13 +177,13 @@ const onSubmit = form.handleSubmit((values) => {
           </FormControl>
           <SelectContent>
             <SelectGroup>
-              <SelectItem value="done">
+              <SelectItem value="COMPLETED">
                 Done
               </SelectItem>
-              <SelectItem value="in progress">
+              <SelectItem value="BEING">
                 In Progress
               </SelectItem>
-              <SelectItem value="todo">
+              <SelectItem value="STARTED">
                 Todo
               </SelectItem>
             </SelectGroup>
@@ -165,7 +192,14 @@ const onSubmit = form.handleSubmit((values) => {
         <FormMessage />
       </FormItem>
     </FormField>
-    <div :class="cn('flex justify-center', todo && 'space-x-5')">
+    <div
+      :class="
+        cn(
+          'flex justify-center',
+          todo && 'space-x-5'
+        )
+      "
+    >
       <Button
         size="sm"
         v-show="todo"

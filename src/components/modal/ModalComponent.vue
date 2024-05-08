@@ -10,7 +10,10 @@ import {
 } from "../../components/ui/dialog";
 import { computed } from "vue";
 import Badge from "../ui/badge/Badge.vue";
-import { TodoPriority } from "../../types";
+import {
+  TodoPriority,
+  TodoStatus,
+} from "../../types";
 import { Button } from "../ui/button";
 import {
   getPriorityClassname,
@@ -20,18 +23,21 @@ import {
 import {
   CheckCircledIcon,
   Pencil2Icon,
+  TrashIcon,
 } from "@radix-icons/vue";
 import { ref } from "vue";
 import FormTodo from "./FormTodo.vue";
+import { useToast } from "../ui/toast";
 
 const store = useStore();
+const { toast } = useToast();
 const isEdit = ref(false);
 
 const todo = computed(
-  () => store.getters.getTodo
+  () => store.getters.getTask
 );
 const open = computed(
-  () => store.getters.dialogState
+  () => store.getters.isDialogOpen
 );
 
 const handleOnChange = () => {
@@ -41,6 +47,19 @@ const handleOnChange = () => {
 
 const toggleEdit = () => {
   isEdit.value = !isEdit.value;
+};
+
+const deleteTask = async (taskId: number) => {
+  const id = await store.dispatch(
+    "deleteTask",
+    taskId
+  );
+
+  toast({
+    title: "Todo deleted" + id,
+    class: "bg-green-600 text-white",
+    duration: 2000,
+  });
 };
 
 console.log(todo.value);
@@ -73,11 +92,12 @@ console.log(todo.value);
         <Badge
           :variant="
             todo &&
-            getStatusClassname(todo?.status)
+            getStatusClassname(todo?.isComplete)
           "
           >{{
             todo &&
-            "Status: " + formatString(todo.status)
+            "Status: " +
+              formatString(todo.isComplete)
           }}</Badge
         >
       </div>
@@ -86,25 +106,36 @@ console.log(todo.value);
         <FormTodo
           :todo="todo"
           :toggleEdit="toggleEdit"
+          :isEdit="isEdit"
         />
       </DialogDescription>
 
       <DialogDescription
         v-else-if="!isEdit && todo"
       >
-        Lorem ipsum dolor sit amet, consectetur
-        adipiscing elit. Aliquam elementum orci
-        tellus, id viverra nisi aliquam sed.
+        {{ todo.content }}
       </DialogDescription>
 
       <DialogDescription v-else="!todo">
         <FormTodo
           :todo="todo"
           :toggleEdit="toggleEdit"
+          :isEdit="isEdit"
         />
       </DialogDescription>
 
       <DialogFooter v-show="!isEdit && todo">
+        <div class="grow">
+          <Button
+            :onclick="
+              () => deleteTask(todo?.id ?? 0)
+            "
+            size="icon"
+            variant="destructive"
+          >
+            <TrashIcon class="w-full h-4" />
+          </Button>
+        </div>
         <Button
           :onclick="() => toggleEdit()"
           size="sm"
@@ -114,7 +145,15 @@ console.log(todo.value);
         </Button>
         <Button
           size="sm"
+          v-show="todo !== null"
           class="bg-green-600 hover:bg-green-600/80"
+          :onclick="
+            () => {
+              todo?.isComplete ===
+                TodoStatus.DONE;
+              store.dispatch('updateTask', todo);
+            }
+          "
         >
           <CheckCircledIcon class="mr-1 mt-0.5" />
           Check Done

@@ -5,6 +5,14 @@ import {
   RootMutations,
   RootState,
 } from ".";
+import {
+  createTaskService,
+  deleteTaskService,
+  fetchTasksService,
+  updateTaskService,
+} from "@/lib/api-services";
+import { QueryParams, Task } from "@/types";
+import { AxiosResponse } from "axios";
 
 type AugmentedActionContext = {
   commit<K extends keyof RootMutations>(
@@ -26,8 +34,22 @@ type AugmentedActionContext = {
 >;
 
 export type Actions = {
-  getTodos(context: AugmentedActionContext): void;
-  // setOpen(context: AugmentedActionContext): void;
+  getTasks(
+    context: AugmentedActionContext,
+    filter: QueryParams
+  ): void;
+  addTask(
+    context: AugmentedActionContext,
+    task: Task
+  ): void;
+  deleteTask(
+    context: AugmentedActionContext,
+    todoId: number
+  ): void;
+  updateTask(
+    context: AugmentedActionContext,
+    task: Task | any
+  ): void;
 };
 
 export const actions: ActionTree<
@@ -35,22 +57,55 @@ export const actions: ActionTree<
   RootState
 > &
   Actions = {
-  //   async getUser(
-  //     { commit, dispatch, state, getters }: AugmentedActionContext,
-  //     id
-  //   ) {
-  //     const users = await api<User[]>([{ id: 'abc123', name: 'John Doe' }])
-  //     const user = users.find(u => u.id === id)
-  //     if (user) {
-  //       commit('setUser', user)
-  //       dispatch('getUser', '')
-  //       getters.userInfo
-  //     }
-  //   }
-  // setOpen({ commit, state }) {
-  //   commit("setDialog", !state.isOpen);
-  // },
-  getTodos({ state }) {
-    return state.todos;
+  async getTasks(
+    { commit },
+    filter: QueryParams
+  ) {
+    try {
+      const todos: Task[] =
+        await fetchTasksService(filter);
+      commit("setInitialTasks", todos);
+      console.log("action-response", todos);
+    } catch (error) {
+      console.log("action-error", error);
+    }
   },
+  async addTask(
+    { commit },
+    values: Partial<Task>
+  ) {
+    try {
+      if (!values) return "No Values provided.";
+
+      const response: AxiosResponse =
+        await createTaskService(values);
+      if (response?.status !== 200) {
+        return response?.data;
+      }
+      console.log("Res DATA", response);
+
+      delete values.id;
+      //@ts-ignore
+      commit("setNewTasks", values);
+      commit("setDialog", null);
+    } catch (error) {
+      console.log("actions-create", error);
+    }
+  },
+  async deleteTask(_, todoId) {
+    const response = await deleteTaskService(
+      todoId
+    );
+    if (response?.status !== 200) return;
+    return todoId;
+  },
+  async updateTask({ commit }, task) {
+    const response = await updateTaskService(
+      task
+    );
+    console.log("updatetask", response);
+  },
+  // async checkDoneTask(){
+  //   c
+  // }
 };

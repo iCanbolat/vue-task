@@ -2,15 +2,12 @@ import type { ColumnDef } from "@tanstack/vue-table";
 import { h } from "vue";
 
 import {
-  labels,
   priorities,
   statuses,
 } from "../data";
-import type { Task } from "../schema";
 import DataTableColumnHeader from "./DataTableColumnHeader.vue";
-import DataTableRowActions from "./DataTableRowActions.vue";
 // import Checkbox from "@/components/ui/checkbox/Checkbox.vue";
-import Badge from "@/components/ui/badge/Badge.vue";
+import { Task } from "@/types";
 
 export const columns: ColumnDef<Task>[] = [
   {
@@ -38,22 +35,15 @@ export const columns: ColumnDef<Task>[] = [
       }),
 
     cell: ({ row }) => {
-      const label = labels.find(
-        (label) =>
-          label.value === row.original.label
-      );
+      // const label = labels.find(
+      //   (label) =>
+      //     label.value === row.original.label
+      // );
 
       return h(
         "div",
         { class: "flex space-x-2" },
         [
-          label
-            ? h(
-                Badge,
-                { variant: "outline" },
-                () => label.label
-              )
-            : null,
           h(
             "span",
             {
@@ -77,7 +67,7 @@ export const columns: ColumnDef<Task>[] = [
     cell: ({ row }) => {
       const status = statuses.find(
         (status) =>
-          status.value === row.getValue("status")
+          status.value === row.original.isComplete
       );
 
       if (!status) return null;
@@ -96,7 +86,11 @@ export const columns: ColumnDef<Task>[] = [
       );
     },
     filterFn: (row, id, value) => {
-      return value.includes(row.getValue(id));
+      console.log(row.original.isComplete);
+      console.log("val", value);
+      return value.includes(
+        row.original.isComplete
+      );
     },
   },
   {

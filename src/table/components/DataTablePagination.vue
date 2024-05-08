@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import type { Table } from "@tanstack/vue-table";
-import type { Task } from "../schema";
 import { ChevronLeftIcon } from "@radix-icons/vue";
 import { ChevronRightIcon } from "@radix-icons/vue";
 import { DoubleArrowLeftIcon } from "@radix-icons/vue";
 import { DoubleArrowRightIcon } from "@radix-icons/vue";
 
 import { Button } from "../../components/ui/button";
+import { Task } from "@/types";
 
 interface DataTablePaginationProps {
   table: Table<Task>;

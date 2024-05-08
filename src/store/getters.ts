@@ -1,7 +1,7 @@
 import { GetterTree } from "vuex";
 import { RootGetters, RootState } from ".";
 import { State } from "./state";
-import { TestTodo } from "@/types";
+import { Task, TestTodo } from "@/types";
 
 type GettersParam = {
   [K in keyof RootGetters]: ReturnType<
@@ -10,9 +10,9 @@ type GettersParam = {
 };
 
 export type Getters = {
-  todoList(state: State): TestTodo[];
-  dialogState(state: State): boolean;
-  getTodo(state: State): TestTodo | null;
+  taskList(state: State): Task[];
+  isDialogOpen(state: State): boolean;
+  getTask(state: State): Task | null;
 };
 
 export const getters: GetterTree<
@@ -20,15 +20,13 @@ export const getters: GetterTree<
   RootState
 > &
   Getters = {
-  todoList(state) {
-    const todos = state.todos;
-
-    return todos;
+  taskList(state) {
+    return state.todos;
   },
-  dialogState(state) {
+  isDialogOpen(state) {
     return state.isOpen;
   },
-  getTodo(state) {
+  getTask(state) {
     return state.todo;
   },
 };
