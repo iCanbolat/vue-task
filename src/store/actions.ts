@@ -92,11 +92,13 @@ export const actions: ActionTree<
       console.log("actions-create", error);
     }
   },
-  async deleteTask(_, todoId) {
+  async deleteTask({ commit }, todoId) {
     const response = await deleteTaskService(
       todoId
     );
     if (response?.status !== 200) return;
+    commit("setDialog", null);
+    commit("deleteTask", todoId);
     return todoId;
   },
   async updateTask({ commit }, task) {
@@ -105,7 +107,4 @@ export const actions: ActionTree<
     );
     console.log("updatetask", response);
   },
-  // async checkDoneTask(){
-  //   c
-  // }
 };

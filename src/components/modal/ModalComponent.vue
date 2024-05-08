@@ -56,7 +56,7 @@ const deleteTask = async (taskId: number) => {
   );
 
   toast({
-    title: "Todo deleted" + id,
+    title: "Task deleted id: " + id,
     class: "bg-green-600 text-white",
     duration: 2000,
   });
