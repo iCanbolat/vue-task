@@ -76,6 +76,11 @@ const onSubmit = form.handleSubmit((values) => {
   console.log("Form submitted!", values);
   if (props.isEdit) {
     store.dispatch("updateTask", values);
+    toast({
+      title: "Task Updated!",
+      class: "bg-green-600 text-white",
+      duration: 2000,
+    });
     return;
   }
   //@ts-ignore

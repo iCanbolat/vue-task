@@ -16,7 +16,7 @@ export const fetchTasksService = async (
       params.append(k, v);
     }
 
-    const { isComplete, priority } = queryParams;
+    const { priority } = queryParams;
 
     console.log(priority);
 
@@ -73,6 +73,8 @@ export const updateTaskService = async (
   values: Partial<Task>
 ) => {
   try {
+    console.log('service-values',values);
+    
     const response = await axios.put(
       import.meta.env.VITE_API_URL +
         "ToDo/" +

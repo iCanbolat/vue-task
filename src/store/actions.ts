@@ -65,7 +65,6 @@ export const actions: ActionTree<
       const todos: Task[] =
         await fetchTasksService(filter);
       commit("setInitialTasks", todos);
-      console.log("action-response", todos);
     } catch (error) {
       console.log("action-error", error);
     }
@@ -82,7 +81,6 @@ export const actions: ActionTree<
       if (response?.status !== 200) {
         return response?.data;
       }
-      console.log("Res DATA", response);
 
       delete values.id;
       //@ts-ignore
@@ -105,6 +103,6 @@ export const actions: ActionTree<
     const response = await updateTaskService(
       task
     );
-    console.log("updatetask", response);
+    commit('updateTask',task)
   },
 };

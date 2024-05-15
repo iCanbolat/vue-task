@@ -13,6 +13,7 @@ export type Mutations = {
     payload: Task[]
   ): void;
   deleteTask(state: State, payload: number): void;
+  updateTask(state: State, payload: Task): void;
 };
 
 export const mutations: MutationTree<State> &
@@ -35,5 +36,14 @@ export const mutations: MutationTree<State> &
     state.todos = state.todos.filter(
       (todo) => todo.id !== payload
     );
+  },
+  updateTask(state, payload) {
+    const updatedArray = state.todos.filter(
+      (task) => task.id !== payload.id
+    );
+    updatedArray.push(payload);
+
+    state.todos = updatedArray;
+    state.isOpen = !state.isOpen;
   },
 };
